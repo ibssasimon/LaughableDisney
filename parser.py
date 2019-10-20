@@ -5,24 +5,24 @@ import re
  
 def main():
 
+    # Get artist input from user
     artist = input("Artist name:  ")
     song_title = input("Song name: ")
     artist = artist.lower().capitalize()
     song_title = song_title.lower()
 
-
+    # Format the artist / song
     formatted_artist = construct_song_URL(artist, song_title)
 
+    # Get URL for Genius
     html = get_html("https://genius.com/" + formatted_artist)
 
+    # Parse for lyrics using BeautifulSoap
     soup = bs(html.text, 'html.parser')
-
     song_body = soup.find(class_="lyrics")
     lyrics = song_body.find('p')
-
     lyrics = re.sub("<(?:a\b[^>]*>|/a>)", "", lyrics.text)
 
-    print(lyrics)
 
     with open(formatted_artist + ".txt", 'w') as f:
         f.write(lyrics)
