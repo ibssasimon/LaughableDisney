@@ -1,7 +1,8 @@
 import requests
 import string
 from bs4 import BeautifulSoup as bs
-
+import re
+ 
 def main():
 
     artist = input("Artist name:  ")
@@ -10,9 +11,15 @@ def main():
 
     soup = bs(html.text, 'html.parser')
 
-    lyrics = soup.find(class_="lyrics")
-    p_lyrics = lyrics.find('p')
-    print(p_lyrics)
+    song_body = soup.find(class_="lyrics")
+    lyrics = song_body.find('p')
+
+    lyrics = re.sub("<(?:a\b[^>]*>|/a>)", "", lyrics.text)
+
+    print(lyrics)
+    
+
+
 # Function to get HTML 
 def get_html(URL):
     r = requests.get(URL)
