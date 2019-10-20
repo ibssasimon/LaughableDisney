@@ -1,6 +1,4 @@
-from bs4 import BeautifulSoup
+import requests
+from bs4 import BeautifulSoup as bs
 
-with open("https://genius.com/Kendrick-lamar-bitch-dont-kill-my-vibe-lyrics") as fp:
-    soup = BeautifulSoup(fp)
-
-soup = BeautifulSoup("<html>data</html>")
+r = requests.get("https://genius.com/Kendrick-lamar-poetic-justice-lyrics")
