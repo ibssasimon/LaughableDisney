@@ -1,25 +1,24 @@
+#!/usr/bin/env python3
 import requests
 import string
 from bs4 import BeautifulSoup as bs
 import re
  
 def main():
-
-    # Get artist input from user
-    artist = input("Artist name:  ")
-    song_title = input("Song name: ")
-    artist = artist.lower().capitalize()
-    song_title = song_title.lower()
-
-    # Format the artist / song
-    formatted_artist = construct_song_URL(artist, song_title)
-
-    # Get URL for Genius
-    html = get_html("https://genius.com/" + formatted_artist)
-
-    parse_lyrics(html)
-    
-
+    urls = []
+    with open('disney_links.txt','r') as f:
+        urls = f.read().split('\n')
+    lyrics = []
+    for u in urls:
+        print("parsing", u)
+        x = parse_lyrics(get_html(u))
+        lyrics.append(x)
+        with open('disney_lyrics.txt', 'a') as f:
+            f.write(x + "\n\n\n")
+    lyrics = "\n\n\n".join(lyrics)
+    with open('disney_lyrics_all.txt', 'w') as f:
+        f.write(lyrics)
+ 
 
 # Function to get HTML 
 def get_html(URL):
@@ -32,9 +31,7 @@ def parse_lyrics(html):
     song_body = soup.find(class_="lyrics")
     lyrics = song_body.find('p')
     lyrics = re.sub("<(?:a\b[^>]*>|/a>)", "", lyrics.text)
-
-    with open(formatted_artist + ".txt", 'w') as f:
-        f.write(lyrics)
+    return lyrics
 
 
 def construct_song_URL(artist, song_title):
