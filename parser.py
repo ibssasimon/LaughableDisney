@@ -7,7 +7,13 @@ def main():
 
     artist = input("Artist name:  ")
     song_title = input("Song name: ")
-    html = get_html("https://genius.com/" + construct_song_URL(artist, song_title))
+    artist = artist.lower().capitalize()
+    song_title = song_title.lower()
+
+
+    formatted_artist = construct_song_URL(artist, song_title)
+
+    html = get_html("https://genius.com/" + formatted_artist)
 
     soup = bs(html.text, 'html.parser')
 
@@ -17,6 +23,9 @@ def main():
     lyrics = re.sub("<(?:a\b[^>]*>|/a>)", "", lyrics.text)
 
     print(lyrics)
+
+    with open(formatted_artist + ".txt", 'w') as f:
+        f.write(lyrics)
     
 
 
@@ -34,9 +43,6 @@ def construct_song_URL(artist, song_title):
     artist_URL = ""
     song_URL = ""
 
-
-    artist = artist.lower().capitalize()
-    song_title = song_title.lower()    
     artist_list = artist.split(" ")
 
 
