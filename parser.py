@@ -17,15 +17,7 @@ def main():
     # Get URL for Genius
     html = get_html("https://genius.com/" + formatted_artist)
 
-    # Parse for lyrics using BeautifulSoap
-    soup = bs(html.text, 'html.parser')
-    song_body = soup.find(class_="lyrics")
-    lyrics = song_body.find('p')
-    lyrics = re.sub("<(?:a\b[^>]*>|/a>)", "", lyrics.text)
-
-
-    with open(formatted_artist + ".txt", 'w') as f:
-        f.write(lyrics)
+    parse_lyrics(html)
     
 
 
@@ -33,6 +25,17 @@ def main():
 def get_html(URL):
     r = requests.get(URL)
     return r
+
+def parse_lyrics(html):
+    # Parse for lyrics using BeautifulSoap
+    soup = bs(html.text, 'html.parser')
+    song_body = soup.find(class_="lyrics")
+    lyrics = song_body.find('p')
+    lyrics = re.sub("<(?:a\b[^>]*>|/a>)", "", lyrics.text)
+
+    with open(formatted_artist + ".txt", 'w') as f:
+        f.write(lyrics)
+
 
 def construct_song_URL(artist, song_title):
 
@@ -54,6 +57,7 @@ def construct_song_URL(artist, song_title):
     for j in range(0, len(song_title_list)):
         song_URL += song_title_list[j] + "-"
     return(artist_URL + song_URL + "lyrics")
+
 
 
 if __name__ == "__main__":
